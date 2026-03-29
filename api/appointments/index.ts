@@ -52,7 +52,7 @@ async function listAppointments(req: VercelRequest, res: VercelResponse) {
 
     let query = supabase
       .from('appointments')
-      .select('id, name, email, phone, date, time, status, external_id, source, created_at')
+      .select('id, name, email, phone, date, time, status, external_id, source, consultation_type, duration_minutes, created_at')
       .order('created_at', { ascending: false })
 
     if (status && typeof status === 'string') {
@@ -75,6 +75,8 @@ async function listAppointments(req: VercelRequest, res: VercelResponse) {
       status: row.status,
       externalId: row.external_id,
       source: row.source,
+      consultationType: row.consultation_type,
+      durationMinutes: row.duration_minutes,
       createdAt: row.created_at,
     }))
 
@@ -137,8 +139,10 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
         time: body.time,
         status: 'confirmed',
         source: 'web',
+        ...(body.consultationType ? { consultation_type: body.consultationType } : {}),
+        ...(body.durationMinutes ? { duration_minutes: body.durationMinutes } : {}),
       }])
-      .select('id, name, email, phone, date, time, status, external_id, source, created_at')
+      .select('id, name, email, phone, date, time, status, external_id, source, consultation_type, duration_minutes, created_at')
       .single()
 
     if (insertError) {
@@ -166,6 +170,8 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
       status: created.status,
       externalId: created.external_id,
       source: created.source,
+      consultationType: created.consultation_type,
+      durationMinutes: created.duration_minutes,
       createdAt: created.created_at,
     })
   } catch (err: any) {

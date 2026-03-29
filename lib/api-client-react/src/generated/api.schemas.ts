@@ -29,6 +29,8 @@ export interface Appointment {
   status: AppointmentStatus;
   externalId?: string | null;
   source?: string | null;
+  consultationType?: string | null;
+  durationMinutes?: number | null;
   createdAt: string;
 }
 
@@ -40,6 +42,8 @@ export interface CreateAppointmentRequest {
   phone: string;
   date: string;
   time: string;
+  consultationType?: string;
+  durationMinutes?: number;
 }
 
 export interface TimeSlot {
@@ -58,4 +62,7 @@ export type ListAppointmentsParams = {
 
 export type GetAvailableSlotsParams = {
   date: string;
+  duration?: string;
+  startHour?: string;
+  endHour?: string;
 };

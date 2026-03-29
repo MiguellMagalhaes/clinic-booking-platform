@@ -27,11 +27,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'method_not_allowed', message: 'Method not allowed' })
   }
 
-  const { date } = req.query
+  const { date, duration, startHour: startHourParam, endHour: endHourParam } = req.query
 
   if (!date || typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return res.status(400).json({ error: 'bad_request', message: 'date is required (YYYY-MM-DD)' })
   }
+
+  // Duration of the appointment in minutes (default 30)
+  const durationMin = duration && typeof duration === 'string' ? Math.max(15, Math.min(120, parseInt(duration, 10) || 30)) : 30
+
+  // Optional time-range filtering per consultation type
+  const rangeStart = startHourParam && typeof startHourParam === 'string' ? Math.max(0, Math.min(24, parseInt(startHourParam, 10) || 8)) : 8
+  const rangeEnd = endHourParam && typeof endHourParam === 'string' ? Math.max(0, Math.min(24, parseInt(endHourParam, 10) || 20)) : 20
 
   // Parse the date parts to avoid timezone issues (no new Date(string))
   const [year, month, day] = date.split('-').map(Number)
@@ -70,10 +77,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Supabase unavailable — all slots shown as available (MVP fallback)
   }
 
-  const slots = ALL_SLOTS.map((time) => ({
-    time,
-    available: !bookedTimes.has(time),
-  }))
+  // Filter slots to the requested time range, then check availability
+  const rangeStartMin = rangeStart * 60
+  const rangeEndMin = rangeEnd * 60
+
+  const slots = ALL_SLOTS
+    .filter((time) => {
+      const [hh, mm] = time.split(':').map(Number)
+      const m = hh * 60 + mm
+      return m >= rangeStartMin && m < rangeEndMin
+    })
+    .map((time) => {
+    // Check if the appointment would fit: none of its 30-min blocks should be booked
+    // and it must not exceed the end of the available range
+    const [hh, mm] = time.split(':').map(Number)
+    const startMin = hh * 60 + mm
+    const endMin = startMin + durationMin
+    if (endMin > rangeEndMin) return { time, available: false }
+
+    // Check each 30-min block within the duration
+    let blocked = false
+    for (let m = startMin; m < endMin; m += 30) {
+      const bh = String(Math.floor(m / 60)).padStart(2, '0')
+      const bm = String(m % 60).padStart(2, '0')
+      if (bookedTimes.has(`${bh}:${bm}`)) {
+        blocked = true
+        break
+      }
+    }
+    return { time, available: !blocked }
+  })
 
   return res.json(slots)
 }

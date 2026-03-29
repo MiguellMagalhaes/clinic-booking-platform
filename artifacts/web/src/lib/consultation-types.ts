@@ -9,6 +9,10 @@ export interface ConsultationType {
   labelFr: string;
   labelDe: string;
   durationMinutes: number;
+  /** Earliest bookable hour (inclusive) */
+  startHour: number;
+  /** Latest bookable hour (exclusive — appointments must end by this hour) */
+  endHour: number;
   icon: LucideIcon;
   /** HSL values for --primary override */
   accentHsl: string;
@@ -28,6 +32,8 @@ export const CONSULTATION_TYPES: ConsultationType[] = [
     labelFr: "Téléconsultation",
     labelDe: "Telekonsultation",
     durationMinutes: 30,
+    startHour: 8,
+    endHour: 20,
     icon: Monitor,
     accentHsl: "212 100% 48%",
     accentClass: "bg-blue-500",
@@ -43,6 +49,8 @@ export const CONSULTATION_TYPES: ConsultationType[] = [
     labelFr: "Médecine Générale et Familiale",
     labelDe: "Allgemein- und Familienmedizin",
     durationMinutes: 30,
+    startHour: 14,
+    endHour: 20,
     icon: Stethoscope,
     accentHsl: "152 69% 40%",
     accentClass: "bg-emerald-500",
@@ -58,6 +66,8 @@ export const CONSULTATION_TYPES: ConsultationType[] = [
     labelFr: "Certificat Médical",
     labelDe: "Ärztliches Attest",
     durationMinutes: 15,
+    startHour: 8,
+    endHour: 20,
     icon: FileText,
     accentHsl: "0 84% 60%",
     accentClass: "bg-red-500",
@@ -73,6 +83,8 @@ export const CONSULTATION_TYPES: ConsultationType[] = [
     labelFr: "Visite à Domicile – Médecine Générale",
     labelDe: "Hausbesuch – Allgemeinmedizin",
     durationMinutes: 60,
+    startHour: 14,
+    endHour: 20,
     icon: Home,
     accentHsl: "25 95% 53%",
     accentClass: "bg-orange-500",

@@ -38,6 +38,9 @@ export const translations = {
     step_next: 'Continuar',
     step_of: 'de',
     change_type: 'Alterar',
+    step_confirm: 'Confirmação',
+    confirm_booking: 'Confirmar Marcação',
+    confirm_summary: 'Reveja os detalhes da sua marcação antes de confirmar.',
     jan: 'Jan', feb: 'Fev', mar: 'Mar', apr: 'Abr', may: 'Mai', jun: 'Jun',
     jul: 'Jul', aug: 'Ago', sep: 'Set', oct: 'Out', nov: 'Nov', dec: 'Dez',
     sun: 'Dom', mon: 'Seg', tue: 'Ter', wed: 'Qua', thu: 'Qui', fri: 'Sex', sat: 'Sáb'
@@ -79,6 +82,9 @@ export const translations = {
     step_next: 'Continue',
     step_of: 'of',
     change_type: 'Change',
+    step_confirm: 'Confirmation',
+    confirm_booking: 'Confirm Booking',
+    confirm_summary: 'Review your booking details before confirming.',
     jan: 'Jan', feb: 'Feb', mar: 'Mar', apr: 'Apr', may: 'May', jun: 'Jun',
     jul: 'Jul', aug: 'Aug', sep: 'Sep', oct: 'Oct', nov: 'Nov', dec: 'Dec',
     sun: 'Sun', mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat'
@@ -120,6 +126,9 @@ export const translations = {
     step_next: 'Continuar',
     step_of: 'de',
     change_type: 'Cambiar',
+    step_confirm: 'Confirmación',
+    confirm_booking: 'Confirmar Reserva',
+    confirm_summary: 'Revise los detalles de su reserva antes de confirmar.',
     jan: 'Ene', feb: 'Feb', mar: 'Mar', apr: 'Abr', may: 'May', jun: 'Jun',
     jul: 'Jul', aug: 'Ago', sep: 'Sep', oct: 'Oct', nov: 'Nov', dec: 'Dic',
     sun: 'Dom', mon: 'Lun', tue: 'Mar', wed: 'Mié', thu: 'Jue', fri: 'Vie', sat: 'Sáb'
@@ -161,6 +170,9 @@ export const translations = {
     step_next: 'Continuer',
     step_of: 'de',
     change_type: 'Modifier',
+    step_confirm: 'Confirmation',
+    confirm_booking: 'Confirmer la Réservation',
+    confirm_summary: 'Vérifiez les détails de votre réservation avant de confirmer.',
     jan: 'Jan', feb: 'Fév', mar: 'Mar', apr: 'Avr', may: 'Mai', jun: 'Juin',
     jul: 'Juil', aug: 'Aoû', sep: 'Sep', oct: 'Oct', nov: 'Nov', dec: 'Déc',
     sun: 'Dim', mon: 'Lun', tue: 'Mar', wed: 'Mer', thu: 'Jeu', fri: 'Ven', sat: 'Sam'
@@ -202,6 +214,9 @@ export const translations = {
     step_next: 'Weiter',
     step_of: 'von',
     change_type: 'Ändern',
+    step_confirm: 'Bestätigung',
+    confirm_booking: 'Buchung Bestätigen',
+    confirm_summary: 'Überprüfen Sie Ihre Buchungsdetails vor der Bestätigung.',
     jan: 'Jan', feb: 'Feb', mar: 'Mär', apr: 'Apr', may: 'Mai', jun: 'Jun',
     jul: 'Jul', aug: 'Aug', sep: 'Sep', oct: 'Okt', nov: 'Nov', dec: 'Dez',
     sun: 'Son', mon: 'Mon', tue: 'Die', wed: 'Mit', thu: 'Don', fri: 'Fre', sat: 'Sam'
