@@ -71,7 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1 container max-w-5xl mx-auto px-4 py-10">
+      <main className="flex-1 container max-w-5xl mx-auto px-4 py-6 sm:py-8">
         {children}
       </main>
     </div>

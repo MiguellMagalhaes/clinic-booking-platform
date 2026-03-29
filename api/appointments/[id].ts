@@ -32,7 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const { data, error } = await supabase
       .from('appointments')
-      .select('id, name, email, phone, date, time, status, external_id, source, created_at')
+      .select('id, name, email, phone, date, time, status, external_id, source, consultation_type, duration_minutes, notes, created_at')
       .eq('id', id)
       .single()
 
@@ -50,6 +50,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       status: data.status,
       externalId: data.external_id,
       source: data.source,
+      consultationType: data.consultation_type,
+      durationMinutes: data.duration_minutes,
+      notes: data.notes ?? null,
       createdAt: data.created_at,
     })
   } catch (err: any) {

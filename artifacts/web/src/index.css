@@ -65,14 +65,14 @@
   --muted-foreground: 215 16% 47%;
   
   --accent: 214 100% 96%;
-  --accent-foreground: 212 100% 48%;
+  --accent-foreground: var(--primary);
   
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
 
   --border: 214 32% 91%;
   --input: 214 32% 91%;
-  --ring: 212 100% 48%;
+  --ring: var(--primary);
 
   --radius: 0.75rem;
 }
@@ -106,7 +106,7 @@
 
   --border: 216 34% 17%;
   --input: 216 34% 17%;
-  --ring: 212 100% 48%;
+  --ring: var(--primary);
 }
 
 @layer base {

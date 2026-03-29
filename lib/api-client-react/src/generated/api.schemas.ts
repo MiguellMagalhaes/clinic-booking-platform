@@ -31,6 +31,7 @@ export interface Appointment {
   source?: string | null;
   consultationType?: string | null;
   durationMinutes?: number | null;
+  notes?: string | null;
   createdAt: string;
 }
 
@@ -44,6 +45,7 @@ export interface CreateAppointmentRequest {
   time: string;
   consultationType?: string;
   durationMinutes?: number;
+  notes?: string | null;
 }
 
 export interface TimeSlot {

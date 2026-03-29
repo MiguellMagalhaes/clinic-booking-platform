@@ -191,6 +191,9 @@ components:
         clinicName:
           type: string
           nullable: true
+        notes:
+          type: string
+          nullable: true
         createdAt:
           type: string
           format: date-time
@@ -223,6 +226,13 @@ components:
           type: string
         clinicId:
           type: integer
+          nullable: true
+        consultationType:
+          type: string
+        durationMinutes:
+          type: integer
+        notes:
+          type: string
           nullable: true
       required:
         - name
