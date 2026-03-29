@@ -3,15 +3,13 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET')
-    res.status(405).json({ error: 'method_not_allowed', message: 'Method not allowed' })
-    return
+    return res.status(405).json({ error: 'method_not_allowed', message: 'Method not allowed' })
   }
 
   const { id } = req.query
 
   if (!id || typeof id !== 'string') {
-    res.status(400).json({ error: 'bad_request', message: 'Invalid id' })
-    return
+    return res.status(400).json({ error: 'bad_request', message: 'Invalid id' })
   }
 
   try {

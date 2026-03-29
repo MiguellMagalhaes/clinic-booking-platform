@@ -12,21 +12,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
   if (req.method === 'OPTIONS') {
-    res.status(204).end()
-    return
+    return res.status(204).end()
   }
 
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET')
-    res.status(405).json({ error: 'method_not_allowed', message: 'Method not allowed' })
-    return
+    return res.status(405).json({ error: 'method_not_allowed', message: 'Method not allowed' })
   }
 
   const { date } = req.query
 
   if (!date || typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    res.status(400).json({ error: 'bad_request', message: 'date is required (YYYY-MM-DD)' })
-    return
+    return res.status(400).json({ error: 'bad_request', message: 'date is required (YYYY-MM-DD)' })
   }
 
   // Parse the date parts to avoid timezone issues (no new Date(string))

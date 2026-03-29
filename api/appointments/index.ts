@@ -22,7 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   res.setHeader('Allow', 'GET, POST')
-  res.status(405).json({ error: 'method_not_allowed', message: 'Method not allowed' })
+  return res.status(405).json({ error: 'method_not_allowed', message: 'Method not allowed' })
 }
 
 async function listAppointments(req: VercelRequest, res: VercelResponse) {
@@ -73,24 +73,19 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
 
   // Validation
   if (!body.name || typeof body.name !== 'string' || body.name.length < 2) {
-    res.status(400).json({ error: 'validation_error', message: 'name is required (min 2 chars)' })
-    return
+    return res.status(400).json({ error: 'validation_error', message: 'name is required (min 2 chars)' })
   }
   if (!body.email || typeof body.email !== 'string' || !body.email.includes('@')) {
-    res.status(400).json({ error: 'validation_error', message: 'valid email is required' })
-    return
+    return res.status(400).json({ error: 'validation_error', message: 'valid email is required' })
   }
   if (!body.phone || typeof body.phone !== 'string' || body.phone.length < 6) {
-    res.status(400).json({ error: 'validation_error', message: 'phone is required (min 6 chars)' })
-    return
+    return res.status(400).json({ error: 'validation_error', message: 'phone is required (min 6 chars)' })
   }
   if (!body.date || typeof body.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(body.date)) {
-    res.status(400).json({ error: 'validation_error', message: 'date is required (YYYY-MM-DD)' })
-    return
+    return res.status(400).json({ error: 'validation_error', message: 'date is required (YYYY-MM-DD)' })
   }
   if (!body.time || typeof body.time !== 'string' || !ALL_SLOTS.includes(body.time)) {
-    res.status(400).json({ error: 'validation_error', message: `time must be one of: ${ALL_SLOTS.join(', ')}` })
-    return
+    return res.status(400).json({ error: 'validation_error', message: `time must be one of: ${ALL_SLOTS.join(', ')}` })
   }
 
   // Check for existing booking in the same slot (date + time must be unique)
