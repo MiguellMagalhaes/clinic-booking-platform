@@ -32,7 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const { data, error } = await supabase
       .from('appointments')
-      .select('id, name, email, phone, date, time, status, external_id, source, consultation_type, duration_minutes, notes, created_at')
+      .select('*')
       .eq('id', id)
       .single()
 
