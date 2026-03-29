@@ -20,7 +20,7 @@ export const AppointmentStatus = {
 } as const;
 
 export interface Appointment {
-  id: number;
+  id: string;
   name: string;
   email: string;
   phone: string;
@@ -29,8 +29,6 @@ export interface Appointment {
   status: AppointmentStatus;
   externalId?: string | null;
   source?: string | null;
-  clinicId?: number | null;
-  clinicName?: string | null;
   createdAt: string;
 }
 
@@ -42,12 +40,6 @@ export interface CreateAppointmentRequest {
   phone: string;
   date: string;
   time: string;
-  clinicId?: number | null;
-}
-
-export interface Clinic {
-  id: number;
-  name: string;
 }
 
 export interface TimeSlot {
@@ -61,11 +53,9 @@ export interface ErrorResponse {
 }
 
 export type ListAppointmentsParams = {
-  clinicId?: number;
   status?: string;
 };
 
 export type GetAvailableSlotsParams = {
   date: string;
-  clinicId?: number;
 };

@@ -10,21 +10,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { id } = req.query
 
-  const numId = Number(id)
-  if (isNaN(numId)) {
+  if (!id || typeof id !== 'string') {
     res.status(400).json({ error: 'bad_request', message: 'Invalid id' })
     return
   }
 
   const { data, error } = await supabase
     .from('appointments')
-    .select(`
-      id, name, email, phone, date, time, status,
-      external_id, source, clinic_id,
-      clinics ( name ),
-      created_at
-    `)
-    .eq('id', numId)
+    .select('id, name, email, phone, date, time, status, external_id, source, created_at')
+    .eq('id', id)
     .single()
 
   if (error || !data) {
@@ -42,8 +36,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     status: data.status,
     externalId: data.external_id,
     source: data.source,
-    clinicId: data.clinic_id,
-    clinicName: Array.isArray((data as any).clinics) ? (data as any).clinics[0]?.name ?? null : (data as any).clinics?.name ?? null,
     createdAt: data.created_at,
   })
 }

@@ -18,7 +18,6 @@ import type {
 
 import type {
   Appointment,
-  Clinic,
   CreateAppointmentRequest,
   ErrorResponse,
   GetAvailableSlotsParams,
@@ -374,79 +373,6 @@ export function useGetAppointment<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetAppointmentQueryOptions(id, options);
-
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-/**
- * @summary List clinics
- */
-export const getListClinicsUrl = () => {
-  return `/api/clinics`;
-};
-
-export const listClinics = async (options?: RequestInit): Promise<Clinic[]> => {
-  return customFetch<Clinic[]>(getListClinicsUrl(), {
-    ...options,
-    method: "GET",
-  });
-};
-
-export const getListClinicsQueryKey = () => {
-  return [`/api/clinics`] as const;
-};
-
-export const getListClinicsQueryOptions = <
-  TData = Awaited<ReturnType<typeof listClinics>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof listClinics>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey = queryOptions?.queryKey ?? getListClinicsQueryKey();
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listClinics>>> = ({
-    signal,
-  }) => listClinics({ signal, ...requestOptions });
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listClinics>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type ListClinicsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof listClinics>>
->;
-export type ListClinicsQueryError = ErrorType<unknown>;
-
-/**
- * @summary List clinics
- */
-
-export function useListClinics<
-  TData = Awaited<ReturnType<typeof listClinics>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof listClinics>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getListClinicsQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

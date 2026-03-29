@@ -1,20 +1,16 @@
 import { useState } from "react";
 import { useTranslation } from "@/hooks/use-translation";
-import { useListAppointments, useListClinics } from "@workspace/api-client-react";
+import { useListAppointments } from "@workspace/api-client-react";
 import { format, parseISO } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Select } from "@/components/ui/select";
-import { Calendar as CalendarIcon, MapPin, User, Mail, Phone, LayoutDashboard } from "lucide-react";
+import { Calendar as CalendarIcon, User, Mail, Phone, LayoutDashboard } from "lucide-react";
 
 export default function Admin() {
   const { t } = useTranslation();
-  const [clinicIdFilter, setClinicIdFilter] = useState<number | undefined>();
   const [statusFilter, setStatusFilter] = useState<string | undefined>();
 
-  const { data: clinics = [] } = useListClinics();
   const { data: appointments = [], isLoading } = useListAppointments({ 
-    clinicId: clinicIdFilter, 
     status: statusFilter === 'all' ? undefined : statusFilter 
   });
 
@@ -45,17 +41,6 @@ export default function Admin() {
         <div className="flex items-center gap-3 w-full md:w-auto">
           <select 
             className="h-10 px-3 rounded-xl border-2 border-input bg-background text-sm font-medium focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none"
-            value={clinicIdFilter || ''}
-            onChange={(e) => setClinicIdFilter(e.target.value ? Number(e.target.value) : undefined)}
-          >
-            <option value="">{t('all_clinics')}</option>
-            {clinics.map(c => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
-
-          <select 
-            className="h-10 px-3 rounded-xl border-2 border-input bg-background text-sm font-medium focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none"
             value={statusFilter || ''}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -77,21 +62,20 @@ export default function Admin() {
                   <th className="px-6 py-4 font-semibold">{t('patient')}</th>
                   <th className="px-6 py-4 font-semibold">{t('contact')}</th>
                   <th className="px-6 py-4 font-semibold">{t('date')} & {t('time')}</th>
-                  <th className="px-6 py-4 font-semibold">{t('clinic')}</th>
                   <th className="px-6 py-4 font-semibold">{t('status')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {isLoading && (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-muted-foreground animate-pulse">
+                    <td colSpan={4} className="px-6 py-8 text-center text-muted-foreground animate-pulse">
                       {t('loading')}
                     </td>
                   </tr>
                 )}
                 {!isLoading && appointments.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
+                    <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground">
                       Nenhuma consulta encontrada.
                     </td>
                   </tr>
@@ -128,12 +112,6 @@ export default function Admin() {
                           <div className="font-medium text-foreground">{format(parseISO(apt.date), 'dd MMM yyyy')}</div>
                           <div className="text-muted-foreground">{apt.time}</div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-muted-foreground" />
-                        <span className="font-medium">{apt.clinicName || '-'}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">

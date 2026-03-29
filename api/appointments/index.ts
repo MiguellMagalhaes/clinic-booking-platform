@@ -20,21 +20,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 }
 
 async function listAppointments(req: VercelRequest, res: VercelResponse) {
-  const { clinicId, status } = req.query
+  const { status } = req.query
 
   let query = supabase
     .from('appointments')
-    .select(`
-      id, name, email, phone, date, time, status,
-      external_id, source, clinic_id,
-      clinics ( name ),
-      created_at
-    `)
+    .select('id, name, email, phone, date, time, status, external_id, source, created_at')
     .order('created_at', { ascending: false })
 
-  if (clinicId) {
-    query = query.eq('clinic_id', Number(clinicId))
-  }
   if (status && typeof status === 'string') {
     query = query.eq('status', status)
   }
@@ -57,8 +49,6 @@ async function listAppointments(req: VercelRequest, res: VercelResponse) {
     status: row.status,
     externalId: row.external_id,
     source: row.source,
-    clinicId: row.clinic_id,
-    clinicName: Array.isArray(row.clinics) ? row.clinics[0]?.name ?? null : row.clinics?.name ?? null,
     createdAt: row.created_at,
   }))
 
@@ -90,18 +80,13 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  // Check for existing booking in the same slot
-  let conflictQuery = supabase
+  // Check for existing booking in the same slot (date + time must be unique)
+  const { data: existing, error: conflictError } = await supabase
     .from('appointments')
     .select('id')
     .eq('date', body.date)
     .eq('time', body.time)
-
-  if (body.clinicId) {
-    conflictQuery = conflictQuery.eq('clinic_id', body.clinicId)
-  }
-
-  const { data: existing, error: conflictError } = await conflictQuery.limit(1)
+    .limit(1)
 
   if (conflictError) {
     res.status(500).json({ error: 'server_error', message: conflictError.message })
@@ -124,14 +109,8 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
       time: body.time,
       status: 'confirmed',
       source: 'web',
-      clinic_id: body.clinicId ?? null,
     }])
-    .select(`
-      id, name, email, phone, date, time, status,
-      external_id, source, clinic_id,
-      clinics ( name ),
-      created_at
-    `)
+    .select('id, name, email, phone, date, time, status, external_id, source, created_at')
     .single()
 
   if (insertError) {
@@ -146,7 +125,6 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
       name: body.name,
       date: body.date,
       time: body.time,
-      clinicName: Array.isArray(created?.clinics) ? created.clinics[0]?.name : created?.clinics?.name,
     }).catch((err) => console.error('Failed to send email:', err))
   }
 
@@ -161,8 +139,6 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
     status: created.status,
     externalId: created.external_id,
     source: created.source,
-    clinicId: created.clinic_id,
-    clinicName: Array.isArray(created.clinics) ? created.clinics[0]?.name ?? null : created.clinics?.name ?? null,
     createdAt: created.created_at,
   })
 }
@@ -172,7 +148,6 @@ async function sendConfirmationEmail(data: {
   name: string
   date: string
   time: string
-  clinicName?: string
 }) {
   const subject = `Confirmação de Consulta - ${data.date} às ${data.time}`
   const body = `Olá ${data.name},
@@ -181,7 +156,6 @@ A sua consulta foi agendada com sucesso!
 
 Data: ${data.date}
 Hora: ${data.time}
-${data.clinicName ? `Clínica: ${data.clinicName}` : ''}
 
 Por favor, apareça 10 minutos antes da hora marcada.
 

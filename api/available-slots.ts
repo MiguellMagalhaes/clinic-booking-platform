@@ -14,23 +14,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const { date, clinicId } = req.query
+  const { date } = req.query
 
   if (!date || typeof date !== 'string') {
     res.status(400).json({ error: 'bad_request', message: 'date is required' })
     return
   }
 
-  let query = supabase
+  const { data: booked, error } = await supabase
     .from('appointments')
     .select('time')
     .eq('date', date)
-
-  if (clinicId) {
-    query = query.eq('clinic_id', Number(clinicId))
-  }
-
-  const { data: booked, error } = await query
 
   if (error) {
     res.status(500).json({ error: 'server_error', message: error.message })
