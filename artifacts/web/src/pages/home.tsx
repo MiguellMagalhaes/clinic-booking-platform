@@ -70,8 +70,10 @@ export default function Home() {
       },
       {
         onSuccess: () => setIsSuccess(true),
-        onError: () =>
-          form.setError("root", { message: t("error") }),
+        onError: (err: any) => {
+          const msg = err?.data?.message ?? err?.message ?? t("error");
+          form.setError("root", { message: msg });
+        },
       }
     );
   };
