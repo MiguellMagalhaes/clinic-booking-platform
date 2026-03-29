@@ -538,6 +538,30 @@ export default function Home() {
                   )}
                 </div>
 
+                {/* Address (required for domicilio only) */}
+                {needsAddress && (
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-foreground flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-muted-foreground" />
+                      {t("address")} <span className="text-destructive">*</span>
+                    </label>
+                    <Input
+                      {...form.register("address")}
+                      placeholder={t("address_placeholder")}
+                      className={cn(
+                        "bg-muted/40 focus:bg-background",
+                        needsAddress && (watchedValues.address ?? "").trim().length < 5 && form.formState.isSubmitted &&
+                          "border-destructive focus-visible:ring-destructive/15",
+                      )}
+                    />
+                    {needsAddress && (watchedValues.address ?? "").trim().length < 5 && form.formState.isSubmitted && (
+                      <p className="text-[11px] text-destructive mt-0.5">
+                        {t("address_required")}
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 {/* Email */}
                 <div className="space-y-1">
                   <label className="text-xs font-medium text-foreground flex items-center gap-1">
@@ -597,30 +621,6 @@ export default function Home() {
                     className="bg-muted/40 focus:bg-background"
                   />
                 </div>
-
-                {/* Address (required for domicilio only) */}
-                {needsAddress && (
-                  <div className="space-y-1">
-                    <label className="text-xs font-medium text-foreground flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-muted-foreground" />
-                      {t("address")} <span className="text-destructive">*</span>
-                    </label>
-                    <Input
-                      {...form.register("address")}
-                      placeholder={t("address_placeholder")}
-                      className={cn(
-                        "bg-muted/40 focus:bg-background",
-                        needsAddress && (watchedValues.address ?? "").trim().length < 5 && form.formState.isSubmitted &&
-                          "border-destructive focus-visible:ring-destructive/15",
-                      )}
-                    />
-                    {needsAddress && (watchedValues.address ?? "").trim().length < 5 && form.formState.isSubmitted && (
-                      <p className="text-[11px] text-destructive mt-0.5">
-                        {t("address_required")}
-                      </p>
-                    )}
-                  </div>
-                )}
 
                 {form.formState.errors.root && (
                   <p className="text-[11px] text-destructive text-center py-1">
