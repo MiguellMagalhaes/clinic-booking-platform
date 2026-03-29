@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { supabase } from '../../lib/supabase'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -15,27 +14,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const { data, error } = await supabase
-    .from('appointments')
-    .select('id, name, email, phone, date, time, status, external_id, source, created_at')
-    .eq('id', id)
-    .single()
+  try {
+    const url = process.env.SUPABASE_URL
+    const key = process.env.SUPABASE_ANON_KEY
+    if (!url || !key) {
+      return res.status(500).json({ error: 'server_error', message: 'Missing database configuration' })
+    }
+    const { createClient } = await import('@supabase/supabase-js')
+    const supabase = createClient(url, key)
 
-  if (error || !data) {
-    res.status(404).json({ error: 'not_found', message: 'Appointment not found' })
-    return
+    const { data, error } = await supabase
+      .from('appointments')
+      .select('id, name, email, phone, date, time, status, external_id, source, created_at')
+      .eq('id', id)
+      .single()
+
+    if (error || !data) {
+      return res.status(404).json({ error: 'not_found', message: 'Appointment not found' })
+    }
+
+    return res.json({
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      date: data.date,
+      time: data.time,
+      status: data.status,
+      externalId: data.external_id,
+      source: data.source,
+      createdAt: data.created_at,
+    })
+  } catch (err: any) {
+    return res.status(500).json({ error: 'server_error', message: err.message ?? 'Failed to connect to database' })
   }
-
-  res.json({
-    id: data.id,
-    name: data.name,
-    email: data.email,
-    phone: data.phone,
-    date: data.date,
-    time: data.time,
-    status: data.status,
-    externalId: data.external_id,
-    source: data.source,
-    createdAt: data.created_at,
-  })
 }

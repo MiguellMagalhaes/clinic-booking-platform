@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { supabase } from '../lib/supabase'
 
 const ALL_SLOTS = [
   '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -7,6 +6,16 @@ const ALL_SLOTS = [
 ]
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Allow CORS
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+  if (req.method === 'OPTIONS') {
+    res.status(204).end()
+    return
+  }
+
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET')
     res.status(405).json({ error: 'method_not_allowed', message: 'Method not allowed' })
@@ -20,36 +29,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  // Parse the date and check if it's a weekend or in the past
+  // Parse the date parts to avoid timezone issues (no new Date(string))
   const [year, month, day] = date.split('-').map(Number)
   const dateObj = new Date(year, month - 1, day)
   const dayOfWeek = dateObj.getDay() // 0 = Sunday, 6 = Saturday
 
+  // Weekends — no slots
   if (dayOfWeek === 0 || dayOfWeek === 6) {
-    res.json([]) // No slots on weekends
-    return
+    return res.json([])
   }
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  if (dateObj < today) {
-    res.json([]) // No slots for past dates
-    return
+  // Past dates — no slots
+  const now = new Date()
+  const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  if (dateObj < todayMidnight) {
+    return res.json([])
   }
 
-  // Query booked appointments for this date
+  // Query Supabase for already-booked times (optional — MVP works without it)
   let bookedTimes = new Set<string>()
   try {
-    const { data: booked, error } = await supabase
-      .from('appointments')
-      .select('time')
-      .eq('date', date)
-
-    if (!error && booked) {
-      bookedTimes = new Set(booked.map((b) => b.time))
+    const { createClient } = await import('@supabase/supabase-js')
+    const url = process.env.SUPABASE_URL
+    const key = process.env.SUPABASE_ANON_KEY
+    if (url && key) {
+      const supabase = createClient(url, key)
+      const { data: booked, error } = await supabase
+        .from('appointments')
+        .select('time')
+        .eq('date', date)
+      if (!error && booked) {
+        bookedTimes = new Set(booked.map((b: { time: string }) => b.time))
+      }
     }
   } catch {
-    // If Supabase is unreachable, show all slots as available (MVP fallback)
+    // Supabase unavailable — all slots shown as available (MVP fallback)
   }
 
   const slots = ALL_SLOTS.map((time) => ({
@@ -57,5 +71,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     available: !bookedTimes.has(time),
   }))
 
-  res.json(slots)
+  return res.json(slots)
 }
