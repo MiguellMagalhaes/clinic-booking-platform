@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd artifacts/web && npx vite build --config vite.config.ts",
+  "outputDirectory": "artifacts/web/dist/public",
+  "installCommand": "npx pnpm install",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}
