@@ -58,7 +58,7 @@ async function listAppointments(req: VercelRequest, res: VercelResponse) {
     externalId: row.external_id,
     source: row.source,
     clinicId: row.clinic_id,
-    clinicName: row.clinics?.name ?? null,
+    clinicName: Array.isArray(row.clinics) ? row.clinics[0]?.name ?? null : row.clinics?.name ?? null,
     createdAt: row.created_at,
   }))
 
@@ -146,7 +146,7 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
       name: body.name,
       date: body.date,
       time: body.time,
-      clinicName: created?.clinics?.name,
+      clinicName: Array.isArray(created?.clinics) ? created.clinics[0]?.name : created?.clinics?.name,
     }).catch((err) => console.error('Failed to send email:', err))
   }
 
@@ -162,7 +162,7 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
     externalId: created.external_id,
     source: created.source,
     clinicId: created.clinic_id,
-    clinicName: created.clinics?.name ?? null,
+    clinicName: Array.isArray(created.clinics) ? created.clinics[0]?.name ?? null : created.clinics?.name ?? null,
     createdAt: created.created_at,
   })
 }

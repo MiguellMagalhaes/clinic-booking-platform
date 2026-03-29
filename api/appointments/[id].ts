@@ -43,7 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     externalId: data.external_id,
     source: data.source,
     clinicId: data.clinic_id,
-    clinicName: (data as any).clinics?.name ?? null,
+    clinicName: Array.isArray((data as any).clinics) ? (data as any).clinics[0]?.name ?? null : (data as any).clinics?.name ?? null,
     createdAt: data.created_at,
   })
 }
