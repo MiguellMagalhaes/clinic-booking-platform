@@ -30,13 +30,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/90 backdrop-blur-xl">
         <div className="container max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-md shadow-primary/20 transition-colors">
+            {/* <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-md shadow-primary/20 transition-colors">
               <HeaderIcon className="w-5 h-5" />
-            </div>
+            </div> */}
             <img
               src="/images/icondrluiscouto.png"
               alt={t('app_name')}
-              className="h-8 object-contain"
+              className="h-14 object-contain"
             />
           </div>
 
