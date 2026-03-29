@@ -24,6 +24,7 @@ import {
   ClipboardCheck,
   Check,
   MessageSquare,
+  MapPin,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -40,9 +41,12 @@ const bookingSchema = z.object({
   email: z.string().email("Email inválido"),
   phone: z.string().min(6, "Telefone obrigatório"),
   notes: z.string().optional(),
+  address: z.string().optional(),
 });
 
 type BookingForm = z.infer<typeof bookingSchema>;
+
+const DOMICILIO_ID = "domicilio";
 
 /* ── Compact step indicator ───────────────────────────────── */
 function StepIndicator({
@@ -170,15 +174,18 @@ export default function Home() {
   /* Form ------------------------------------------------------------------ */
   const form = useForm<BookingForm>({
     resolver: zodResolver(bookingSchema),
-    defaultValues: { name: "", email: "", phone: "", notes: "" },
+    defaultValues: { name: "", email: "", phone: "", notes: "", address: "" },
     mode: "onChange",
   });
 
   const watchedValues = form.watch();
+  const needsAddress = selectedType?.id === DOMICILIO_ID;
+
   const isFormFilled =
     watchedValues.name.trim().length >= 2 &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(watchedValues.email) &&
-    watchedValues.phone.trim().length >= 6;
+    watchedValues.phone.trim().length >= 6 &&
+    (!needsAddress || (watchedValues.address ?? "").trim().length >= 5);
 
   const canSubmit =
     !!selectedType && !!selectedDate && !!selectedTime && isFormFilled;
@@ -195,6 +202,7 @@ export default function Home() {
           consultationType: selectedType.id,
           durationMinutes: selectedType.durationMinutes,
           ...(values.notes ? { notes: values.notes } : {}),
+          ...(needsAddress && values.address ? { address: values.address } : {}),
         },
       },
       {
@@ -277,6 +285,14 @@ export default function Home() {
                   </span>
                 </div>
               )}
+              {needsAddress && form.getValues("address") && (
+                <div className="flex justify-between px-3 py-2">
+                  <span className="text-muted-foreground">{t("address")}</span>
+                  <span className="font-medium text-foreground text-right max-w-[55%] truncate">
+                    {form.getValues("address")}
+                  </span>
+                </div>
+              )}
             </div>
           )}
           <Button onClick={resetBooking} variant="outline" className="w-full">
@@ -342,10 +358,10 @@ export default function Home() {
         {step === 1 && (
           <motion.div
             key="step1"
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 16 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
           >
             <div className="text-center mb-6">
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
@@ -400,10 +416,10 @@ export default function Home() {
         {step === 2 && (
           <motion.div
             key="step2"
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -16 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
           >
             <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-2 mb-4">
@@ -427,10 +443,10 @@ export default function Home() {
         {step === 3 && selectedDate && (
           <motion.div
             key="step3"
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -16 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
           >
             <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-2 mb-4">
@@ -488,10 +504,10 @@ export default function Home() {
         {step === 4 && (
           <motion.div
             key="step4"
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -16 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
           >
             <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-2 mb-4">
@@ -582,6 +598,30 @@ export default function Home() {
                   />
                 </div>
 
+                {/* Address (required for domicilio only) */}
+                {needsAddress && (
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-foreground flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-muted-foreground" />
+                      {t("address")} <span className="text-destructive">*</span>
+                    </label>
+                    <Input
+                      {...form.register("address")}
+                      placeholder={t("address_placeholder")}
+                      className={cn(
+                        "bg-muted/40 focus:bg-background",
+                        needsAddress && (watchedValues.address ?? "").trim().length < 5 && form.formState.isSubmitted &&
+                          "border-destructive focus-visible:ring-destructive/15",
+                      )}
+                    />
+                    {needsAddress && (watchedValues.address ?? "").trim().length < 5 && form.formState.isSubmitted && (
+                      <p className="text-[11px] text-destructive mt-0.5">
+                        {t("address_required")}
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 {form.formState.errors.root && (
                   <p className="text-[11px] text-destructive text-center py-1">
                     {form.formState.errors.root.message}
@@ -616,10 +656,10 @@ export default function Home() {
         {step === 5 && selectedType && selectedDate && selectedTime && (
           <motion.div
             key="step5"
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -16 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
           >
             <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-2 mb-3">
@@ -641,6 +681,9 @@ export default function Home() {
                 <SummaryRow label={t("phone")} value={form.getValues("phone")} />
                 {form.getValues("notes") && (
                   <SummaryRow label={t("notes")} value={form.getValues("notes")!} />
+                )}
+                {needsAddress && form.getValues("address") && (
+                  <SummaryRow label={t("address")} value={form.getValues("address")!} />
                 )}
               </div>
 

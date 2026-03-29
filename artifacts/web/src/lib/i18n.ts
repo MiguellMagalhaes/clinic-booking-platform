@@ -48,6 +48,9 @@ export const translations = {
     confirm_summary: 'Reveja os detalhes da sua marcação antes de confirmar.',
     notes: 'Observações',
     notes_placeholder: 'Descreva brevemente o motivo da consulta (opcional)',
+    address: 'Morada',
+    address_placeholder: 'Introduza a morada para a consulta ao domicílio',
+    address_required: 'Morada é obrigatória para consultas ao domicílio',
     jan: 'Jan', feb: 'Fev', mar: 'Mar', apr: 'Abr', may: 'Mai', jun: 'Jun',
     jul: 'Jul', aug: 'Ago', sep: 'Set', oct: 'Out', nov: 'Nov', dec: 'Dez',
     sun: 'Dom', mon: 'Seg', tue: 'Ter', wed: 'Qua', thu: 'Qui', fri: 'Sex', sat: 'Sáb'
@@ -99,6 +102,9 @@ export const translations = {
     confirm_summary: 'Review your booking details before confirming.',
     notes: 'Notes',
     notes_placeholder: 'Briefly describe the reason for the appointment (optional)',
+    address: 'Address',
+    address_placeholder: 'Enter the address for the home visit',
+    address_required: 'Address is required for home visits',
     jan: 'Jan', feb: 'Feb', mar: 'Mar', apr: 'Apr', may: 'May', jun: 'Jun',
     jul: 'Jul', aug: 'Aug', sep: 'Sep', oct: 'Oct', nov: 'Nov', dec: 'Dec',
     sun: 'Sun', mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat'
@@ -150,6 +156,9 @@ export const translations = {
     confirm_summary: 'Revise los detalles de su reserva antes de confirmar.',
     notes: 'Observaciones',
     notes_placeholder: 'Describa brevemente el motivo de la consulta (opcional)',
+    address: 'Dirección',
+    address_placeholder: 'Introduzca la dirección para la consulta a domicilio',
+    address_required: 'La dirección es obligatoria para consultas a domicilio',
     jan: 'Ene', feb: 'Feb', mar: 'Mar', apr: 'Abr', may: 'May', jun: 'Jun',
     jul: 'Jul', aug: 'Ago', sep: 'Sep', oct: 'Oct', nov: 'Nov', dec: 'Dic',
     sun: 'Dom', mon: 'Lun', tue: 'Mar', wed: 'Mié', thu: 'Jue', fri: 'Vie', sat: 'Sáb'
@@ -201,6 +210,9 @@ export const translations = {
     confirm_summary: 'Vérifiez les détails de votre réservation avant de confirmer.',
     notes: 'Observations',
     notes_placeholder: 'Décrivez brièvement le motif de la consultation (facultatif)',
+    address: 'Adresse',
+    address_placeholder: "Entrez l'adresse pour la visite à domicile",
+    address_required: "L'adresse est obligatoire pour les visites à domicile",
     jan: 'Jan', feb: 'Fév', mar: 'Mar', apr: 'Avr', may: 'Mai', jun: 'Juin',
     jul: 'Juil', aug: 'Aoû', sep: 'Sep', oct: 'Oct', nov: 'Nov', dec: 'Déc',
     sun: 'Dim', mon: 'Lun', tue: 'Mar', wed: 'Mer', thu: 'Jeu', fri: 'Ven', sat: 'Sam'
@@ -252,6 +264,9 @@ export const translations = {
     confirm_summary: 'Überprüfen Sie Ihre Buchungsdetails vor der Bestätigung.',
     notes: 'Bemerkungen',
     notes_placeholder: 'Beschreiben Sie kurz den Grund für den Termin (optional)',
+    address: 'Adresse',
+    address_placeholder: 'Geben Sie die Adresse für den Hausbesuch ein',
+    address_required: 'Adresse ist für Hausbesuche erforderlich',
     jan: 'Jan', feb: 'Feb', mar: 'Mär', apr: 'Apr', may: 'Mai', jun: 'Jun',
     jul: 'Jul', aug: 'Aug', sep: 'Sep', oct: 'Okt', nov: 'Nov', dec: 'Dez',
     sun: 'Son', mon: 'Mon', tue: 'Die', wed: 'Mit', thu: 'Don', fri: 'Fre', sat: 'Sam'

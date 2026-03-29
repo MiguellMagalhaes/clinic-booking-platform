@@ -53,6 +53,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       consultationType: data.consultation_type,
       durationMinutes: data.duration_minutes,
       notes: data.notes ?? null,
+      address: data.address ?? null,
       createdAt: data.created_at,
     })
   } catch (err: any) {

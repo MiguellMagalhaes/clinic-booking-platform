@@ -78,6 +78,7 @@ async function listAppointments(req: VercelRequest, res: VercelResponse) {
       consultationType: row.consultation_type,
       durationMinutes: row.duration_minutes,
       notes: row.notes ?? null,
+      address: row.address ?? null,
       createdAt: row.created_at,
     }))
 
@@ -143,6 +144,7 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
         ...(body.consultationType ? { consultation_type: body.consultationType } : {}),
         ...(body.durationMinutes ? { duration_minutes: body.durationMinutes } : {}),
         ...(body.notes ? { notes: body.notes } : {}),
+        ...(body.address ? { address: body.address } : {}),
       }])
       .select('*')
       .single()
@@ -175,6 +177,7 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
       consultationType: created.consultation_type,
       durationMinutes: created.duration_minutes,
       notes: created.notes ?? null,
+      address: created.address ?? null,
       createdAt: created.created_at,
     })
   } catch (err: any) {
