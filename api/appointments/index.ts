@@ -1,17 +1,14 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import type { SupabaseClient } from '@supabase/supabase-js'
 
 const ALL_SLOTS = [
   '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
   '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
 ]
 
-async function getSupabase(): Promise<SupabaseClient> {
+async function getSupabase(): Promise<any> {
   const url = process.env.SUPABASE_URL
   const key = process.env.SUPABASE_ANON_KEY
-  if (!url || !key) {
-    throw new Error('Missing SUPABASE_URL or SUPABASE_ANON_KEY')
-  }
+  if (!url || !key) return null
   const { createClient } = await import('@supabase/supabase-js')
   return createClient(url, key)
 }
@@ -33,6 +30,9 @@ async function listAppointments(req: VercelRequest, res: VercelResponse) {
 
   try {
     const supabase = await getSupabase()
+    if (!supabase) {
+      return res.status(500).json({ error: 'server_error', message: 'Missing database configuration' })
+    }
 
     let query = supabase
       .from('appointments')
@@ -96,6 +96,9 @@ async function createAppointment(req: VercelRequest, res: VercelResponse) {
   // Check for existing booking in the same slot (date + time must be unique)
   try {
     const supabase = await getSupabase()
+    if (!supabase) {
+      return res.status(500).json({ error: 'server_error', message: 'Missing database configuration' })
+    }
 
     const { data: existing, error: conflictError } = await supabase
       .from('appointments')
