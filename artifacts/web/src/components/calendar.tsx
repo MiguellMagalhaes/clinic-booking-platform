@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, startOfWeek, endOfWeek, isBefore, startOfDay } from "date-fns";
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, startOfWeek, endOfWeek, isBefore, startOfDay, isWeekend } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "@/hooks/use-translation";
 import { cn } from "@/lib/utils";
@@ -61,17 +61,18 @@ export function Calendar({ selectedDate, onSelect }: CalendarProps) {
           const isSelected = selectedDate ? isSameDay(day, selectedDate) : false;
           const isCurrentMonth = isSameMonth(day, currentMonth);
           const isPast = isBefore(day, startOfDay(new Date()));
+          const isDisabled = isPast || isWeekend(day);
 
           return (
             <button
               key={i}
-              onClick={() => !isPast && onSelect(day)}
-              disabled={isPast}
+              onClick={() => !isDisabled && onSelect(day)}
+              disabled={isDisabled}
               className={cn(
                 "aspect-square flex items-center justify-center rounded-xl text-sm font-medium transition-all",
                 !isCurrentMonth && "text-muted-foreground/30",
-                isPast && "text-muted-foreground/30 cursor-not-allowed",
-                !isPast && isCurrentMonth && !isSelected && "hover:bg-primary/10 hover:text-primary",
+                isDisabled && "text-muted-foreground/30 cursor-not-allowed",
+                !isDisabled && isCurrentMonth && !isSelected && "hover:bg-primary/10 hover:text-primary",
                 isSelected && "bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-105"
               )}
             >
