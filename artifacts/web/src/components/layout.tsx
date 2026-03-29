@@ -33,9 +33,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-md shadow-primary/20 transition-colors">
               <HeaderIcon className="w-5 h-5" />
             </div>
-            <span className="font-semibold text-base text-foreground tracking-tight">
-              {t('app_name')}
-            </span>
+            <img
+              src="/images/icondrluiscouto.png"
+              alt={t('app_name')}
+              className="h-8 object-contain"
+            />
           </div>
 
           <div className="relative" ref={langRef}>
